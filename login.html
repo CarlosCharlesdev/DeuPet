@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 PetMatch - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <h1 class="login-title">🐕 PetMatch</h1>
+                <p class="login-subtitle">Faça login para continuar</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="seu@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span class="checkbox-text">Lembrar de mim</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span class="btn-text">Entrar</span>
+                    <span class="btn-loading" style="display: none;">Entrando...</span>
+                </button>
+
+                <div class="form-divider">
+                    <span>ou</span>
+                </div>
+
+                <button type="button" class="register-btn" id="registerBtn">
+                    Criar conta como Cliente
+                </button>
+            </form>
+
+            <!-- Demo Credentials -->
+            <div class="demo-credentials">
+                <h3>🧪 Credenciais de Teste</h3>
+                <div class="demo-item">
+                    <strong>Cliente:</strong>
+                    <span>cliente@petmatch.com / 123456</span>
+                </div>
+                <div class="demo-item">
+                    <strong>ONG:</strong>
+                    <span>ong@petmatch.com / 123456</span>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

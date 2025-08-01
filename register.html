@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 PetMatch - Cadastro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <h1 class="login-title">🐕 PetMatch</h1>
+                <p class="login-subtitle">Crie sua conta</p>
+            </div>
+
+            <!-- Register Form -->
+            <form class="login-form" id="registerForm">
+                <div class="form-group">
+                    <label for="name" class="form-label">Nome Completo</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-input" 
+                        placeholder="Seu nome completo"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="seu@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Telefone</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        class="form-input" 
+                        placeholder="(11) 99999-9999"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="city" class="form-label">Cidade</label>
+                    <input 
+                        type="text" 
+                        id="city" 
+                        name="city" 
+                        class="form-input" 
+                        placeholder="São Paulo, SP"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="••••••••"
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-input" 
+                        placeholder="••••••••"
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <button type="submit" class="login-btn" id="registerSubmitBtn">
+                    <span class="btn-text">Criar Conta</span>
+                    <span class="btn-loading" style="display: none;">Criando...</span>
+                </button>
+
+                <div class="form-divider">
+                    <span>ou</span>
+                </div>
+
+                <button type="button" class="register-btn" onclick="window.location.href='/login.html'">
+                    Já tenho uma conta
+                </button>
+            </form>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage" style="display: none;"></div>
+            <div class="success-message" id="successMessage" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+</html>

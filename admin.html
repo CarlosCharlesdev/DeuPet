@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏢 PetMatch - Painel ONG</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <h1 class="admin-title">🏢 Painel ONG</h1>
+                <div class="admin-user-info">
+                    <span class="user-name" id="userName">Carregando...</span>
+                    <button class="logout-btn" id="logoutBtn">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🐕</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalDogs">0</div>
+                        <div class="stat-label">Cachorros</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🐱</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalCats">0</div>
+                        <div class="stat-label">Gatos</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalAdopted">0</div>
+                        <div class="stat-label">Adotados</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalInterested">0</div>
+                        <div class="stat-label">Interessados</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Pet Form -->
+            <div class="admin-section">
+                <h2 class="section-title">➕ Cadastrar Novo Animal</h2>
+                <form class="pet-form" id="petForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="petName" class="form-label">Nome</label>
+                            <input type="text" id="petName" name="name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="petAge" class="form-label">Idade</label>
+                            <input type="text" id="petAge" name="age" class="form-input" placeholder="2 anos" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="petType" class="form-label">Tipo</label>
+                            <select id="petType" name="type" class="form-input" required>
+                                <option value="">Selecione...</option>
+                                <option value="dog">🐕 Cachorro</option>
+                                <option value="cat">🐱 Gato</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="petBreed" class="form-label">Raça</label>
+                            <input type="text" id="petBreed" name="breed" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="petSize" class="form-label">Porte</label>
+                            <select id="petSize" name="size" class="form-input" required>
+                                <option value="">Selecione...</option>
+                                <option value="Pequeno">Pequeno</option>
+                                <option value="Médio">Médio</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="petLocation" class="form-label">Localização</label>
+                            <input type="text" id="petLocation" name="location" class="form-input" placeholder="São Paulo, SP" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="petCharacteristics" class="form-label">Características (separadas por vírgula)</label>
+                        <input type="text" id="petCharacteristics" name="characteristics" class="form-input" placeholder="Carinhoso, Brincalhão, Obediente" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="petBio" class="form-label">Biografia</label>
+                        <textarea id="petBio" name="bio" class="form-textarea" rows="4" placeholder="Conte a história do animal..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="petImage" class="form-label">URL da Imagem</label>
+                        <input type="url" id="petImage" name="image" class="form-input" placeholder="https://exemplo.com/foto.jpg">
+                        <small class="form-help">Deixe em branco para usar imagem placeholder</small>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">➕ Cadastrar Animal</span>
+                        <span class="btn-loading" style="display: none;">Cadastrando...</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Animals List -->
+            <div class="admin-section">
+                <h2 class="section-title">🐾 Animais Cadastrados</h2>
+                <div class="animals-grid" id="animalsGrid">
+                    <!-- Animals will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
