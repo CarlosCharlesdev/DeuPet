@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 PetMatch - Tinder para Cachorros</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">🐕 PetMatch</h1>
+            <p class="subtitle">Encontre seu novo melhor amigo</p>
+        </div>
+
+        <!-- Card Container -->
+        <div class="card-container">
+            <!-- Background cards for stack effect -->
+            <div class="card card-bg card-bg-1"></div>
+            <div class="card card-bg card-bg-2"></div>
+
+            <!-- Main card -->
+            <div class="card main-card" id="mainCard">
+                <!-- Dog Image -->
+                <div class="image-container">
+                    <img id="dogImage" src="/placeholder.svg" alt="" class="dog-image">
+                    <div class="size-badge" id="sizeBadge"></div>
+                </div>
+
+                <!-- Dog Info -->
+                <div class="dog-info">
+                    <!-- Name and Age -->
+                    <div class="name-age-container">
+                        <h2 class="dog-name" id="dogName"></h2>
+                        <div class="age-container">
+                            <span class="calendar-icon">📅</span>
+                            <span class="dog-age" id="dogAge"></span>
+                        </div>
+                    </div>
+
+                    <!-- Breed and Location -->
+                    <div class="details-container">
+                        <div class="detail-item">
+                            <span class="info-icon">ℹ️</span>
+                            <span class="dog-breed" id="dogBreed"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="location-icon">📍</span>
+                            <span class="dog-location" id="dogLocation"></span>
+                        </div>
+                    </div>
+
+                    <!-- Characteristics -->
+                    <div class="characteristics" id="characteristics"></div>
+
+                    <!-- Bio -->
+                    <div class="bio-container">
+                        <p class="dog-bio" id="dogBio"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn reject-btn" id="rejectBtn">
+                <span class="btn-icon">❌</span>
+            </button>
+            <button class="action-btn adopt-btn" id="adoptBtn">
+                <span class="btn-icon">❤️</span>
+            </button>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container" id="progressContainer"></div>
+
+        <!-- Match Counter -->
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="adoptedCount">0</span>
+                <span class="stat-label">Adotados</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="rejectedCount">0</span>
+                <span class="stat-label">Rejeitados</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
