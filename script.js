@@ -1,94 +1,5 @@
 // Dog data
-const dogs = [
-  {
-    id: 1,
-    name: "Luna",
-    age: "2 anos",
-    breed: "Golden Retriever",
-    location: "São Paulo, SP",
-    image: "/placeholder.svg?height=400&width=400&text=Luna+Golden+Retriever",
-    characteristics: ["Carinhosa", "Brincalhona", "Obediente"],
-    bio: "Oi! Sou a Luna e adoro brincar no parque. Sou muito carinhosa e amo fazer novos amigos. Procuro uma família que goste de aventuras!",
-    size: "Grande",
-  },
-  {
-    id: 2,
-    name: "Max",
-    age: "4 anos",
-    breed: "Labrador",
-    location: "Rio de Janeiro, RJ",
-    image: "/placeholder.svg?height=400&width=400&text=Max+Labrador",
-    characteristics: ["Leal", "Energético", "Inteligente"],
-    bio: "Eu sou o Max! Adoro nadar e correr na praia. Sou muito leal e protetor da minha família. Que tal me dar uma chance?",
-    size: "Grande",
-  },
-  {
-    id: 3,
-    name: "Bella",
-    age: "1 ano",
-    breed: "Border Collie",
-    location: "Belo Horizonte, MG",
-    image: "/placeholder.svg?height=400&width=400&text=Bella+Border+Collie",
-    characteristics: ["Esperta", "Ativa", "Carinhosa"],
-    bio: "Sou a Bella e sou super esperta! Aprendo truques rapidinho e adoro brincar de buscar a bolinha. Preciso de uma família ativa!",
-    size: "Médio",
-  },
-  {
-    id: 4,
-    name: "Thor",
-    age: "3 anos",
-    breed: "Pastor Alemão",
-    location: "Curitiba, PR",
-    image: "/placeholder.svg?height=400&width=400&text=Thor+Pastor+Alemão",
-    characteristics: ["Protetor", "Corajoso", "Leal"],
-    bio: "Eu sou o Thor! Sou um guardião nato, mas também muito carinhoso com quem amo. Procuro uma família que me dê muito amor e atenção.",
-    size: "Grande",
-  },
-  {
-    id: 5,
-    name: "Mia",
-    age: "6 meses",
-    breed: "Poodle",
-    location: "Porto Alegre, RS",
-    image: "/placeholder.svg?height=400&width=400&text=Mia+Poodle",
-    characteristics: ["Fofa", "Brincalhona", "Pequena"],
-    bio: "Oi, eu sou a Mia! Sou pequenininha mas cheia de energia. Adoro brincar e fazer travessuras. Quem quer me mimar muito?",
-    size: "Pequeno",
-  },
-  {
-    id: 6,
-    name: "Rex",
-    age: "5 anos",
-    breed: "Rottweiler",
-    location: "Brasília, DF",
-    image: "/placeholder.svg?height=400&width=400&text=Rex+Rottweiler",
-    characteristics: ["Forte", "Protetor", "Carinhoso"],
-    bio: "Sou o Rex! Posso parecer intimidador, mas sou um gigante gentil. Adoro crianças e sou muito protetor da minha família.",
-    size: "Grande",
-  },
-  {
-    id: 7,
-    name: "Nina",
-    age: "3 anos",
-    breed: "Beagle",
-    location: "Salvador, BA",
-    image: "/placeholder.svg?height=400&width=400&text=Nina+Beagle",
-    characteristics: ["Curiosa", "Amigável", "Aventureira"],
-    bio: "Eu sou a Nina! Adoro explorar e farejar tudo. Sou muito sociável e me dou bem com outros pets. Vamos ser amigos?",
-    size: "Médio",
-  },
-  {
-    id: 8,
-    name: "Buddy",
-    age: "7 anos",
-    breed: "Vira-lata",
-    location: "Recife, PE",
-    image: "/placeholder.svg?height=400&width=400&text=Buddy+Vira-lata",
-    characteristics: ["Sábio", "Calmo", "Leal"],
-    bio: "Sou o Buddy, um senhor experiente! Já passei por muita coisa na vida e agora só quero um lar tranquilo para descansar e dar muito amor.",
-    size: "Médio",
-  },
-]
+let dogs = []
 
 // App state
 let currentIndex = 0
@@ -120,11 +31,106 @@ let currentY = 0
 let isDragging = false
 
 // Initialize app
-function init() {
+async function init() {
+  // Check if user is logged in
+  const currentUser = localStorage.getItem("currentUser")
+  if (!currentUser) {
+    window.location.href = "/login.html"
+    return
+  }
+
+  const user = JSON.parse(currentUser)
+
+  // Add logout button to header
+  addLogoutButton()
+
+  // Load animals from server
+  await loadAnimals()
+
+  if (dogs.length === 0) {
+    showNoAnimalsMessage()
+    return
+  }
+
   createProgressDots()
   displayCurrentDog()
   setupEventListeners()
   loadStats()
+
+  // Check if it's user's first time and show introduction
+  checkFirstTimeUser(user)
+}
+
+function addLogoutButton() {
+  const header = document.querySelector(".header")
+  const logoutBtn = document.createElement("button")
+  logoutBtn.className = "logout-header-btn"
+  logoutBtn.textContent = "Sair"
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("currentUser")
+    window.location.href = "/login.html"
+  }
+  header.appendChild(logoutBtn)
+}
+
+async function loadAnimals() {
+  try {
+    const response = await fetch("/api/animals")
+    const result = await response.json()
+
+    if (result.success) {
+      dogs = result.animals
+    } else {
+      console.error("Error loading animals:", result.message)
+    }
+  } catch (error) {
+    console.error("Error loading animals:", error)
+    // Fallback to default data if server is not available
+    dogs = getDefaultAnimals()
+  }
+}
+
+function getDefaultAnimals() {
+  return [
+    {
+      id: 1,
+      name: "Luna",
+      age: "2 anos",
+      breed: "Golden Retriever",
+      location: "São Paulo, SP",
+      image: "/placeholder.svg?height=400&width=400&text=Luna+Golden+Retriever",
+      characteristics: ["Carinhosa", "Brincalhona", "Obediente"],
+      bio: "Oi! Sou a Luna e adoro brincar no parque. Sou muito carinhosa e amo fazer novos amigos. Procuro uma família que goste de aventuras!",
+      size: "Grande",
+      type: "dog",
+    },
+    {
+      id: 2,
+      name: "Max",
+      age: "4 anos",
+      breed: "Labrador",
+      location: "Rio de Janeiro, RJ",
+      image: "/placeholder.svg?height=400&width=400&text=Max+Labrador",
+      characteristics: ["Leal", "Energético", "Inteligente"],
+      bio: "Eu sou o Max! Adoro nadar e correr na praia. Sou muito leal e protetor da minha família. Que tal me dar uma chance?",
+      size: "Grande",
+      type: "dog",
+    },
+  ]
+}
+
+function showNoAnimalsMessage() {
+  const app = document.querySelector(".app")
+  app.innerHTML = `
+    <div class="header">
+      <h1 class="title">🐕 PetMatch</h1>
+      <p class="subtitle">Nenhum animal disponível no momento</p>
+    </div>
+    <div style="text-align: center; padding: 2rem; background: white; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+      <p style="color: #6b7280; margin-bottom: 1rem;">Não há animais cadastrados para adoção no momento.</p>
+      <p style="color: #6b7280;">Volte em breve para conhecer novos amigos! 🐾</p>
+    </div>
+  `
 }
 
 // Load stats from localStorage
@@ -163,7 +169,7 @@ function displayCurrentDog() {
   // Add loading class
   mainCard.classList.add("loading")
 
-  dogImage.src = dog.image
+  dogImage.src = dog.image || `/placeholder.svg?height=400&width=400&text=${dog.name}+${dog.breed}`
   dogImage.alt = dog.name
   dogName.textContent = dog.name
   dogAge.textContent = dog.age
@@ -199,7 +205,7 @@ function updateProgressDots() {
 }
 
 // Handle action (adopt or reject)
-function handleAction(action) {
+async function handleAction(action) {
   if (isAnimating) return
 
   isAnimating = true
@@ -220,7 +226,23 @@ function handleAction(action) {
   rejectBtn.disabled = true
   adoptBtn.disabled = true
 
-  // Log action
+  // Log action to server
+  try {
+    await fetch("/api/actions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        animalId: dogs[currentIndex].id,
+        action: action,
+        userId: JSON.parse(localStorage.getItem("currentUser")).id,
+      }),
+    })
+  } catch (error) {
+    console.error("Error logging action:", error)
+  }
+
   console.log(`${action === "adopt" ? "❤️ Adotado" : "❌ Rejeitado"}: ${dogs[currentIndex].name}`)
 
   setTimeout(() => {

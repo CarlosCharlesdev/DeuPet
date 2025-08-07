@@ -1,8 +1,77 @@
 const http = require("http")
 const fs = require("fs")
 const path = require("path")
+const url = require("url")
 
 const PORT = process.env.PORT || 3000
+
+// Simple in-memory database (in production, use a real database)
+const users = [
+  {
+    id: 1,
+    email: "cliente@petmatch.com",
+    password: "123456",
+    name: "Cliente Teste",
+    type: "client",
+    phone: "(11) 99999-9999",
+    city: "São Paulo, SP",
+  },
+  {
+    id: 2,
+    email: "ong@petmatch.com",
+    password: "123456",
+    name: "ONG Amigos dos Animais",
+    type: "ong",
+    phone: "(11) 88888-8888",
+    city: "São Paulo, SP",
+  },
+]
+
+const animals = [
+  {
+    id: 1,
+    name: "Luna",
+    age: "2 anos",
+    breed: "Golden Retriever",
+    location: "São Paulo, SP",
+    image: "/imagAnimais/Goldensondika.jpg",
+    characteristics: ["Carinhosa", "Brincalhona", "Obediente"],
+    bio: "Oi! Sou a Luna e adoro brincar no parque. Sou muito carinhosa e amo fazer novos amigos. Procuro uma família que goste de aventuras!",
+    size: "Grande",
+    type: "dog",
+    ongId: 2,
+  },
+  {
+    id: 2,
+    name: "Max",
+    age: "4 anos",
+    breed: "Labrador",
+    location: "Rio de Janeiro, RJ",
+    image: "/imagAnimais/labrador-tudo-sobre-a-raca.jpg",
+    characteristics: ["Leal", "Energético", "Inteligente"],
+    bio: "Eu sou o Max! Adoro nadar e correr na praia. Sou muito leal e protetor da minha família. Que tal me dar uma chance?",
+    size: "Grande",
+    type: "dog",
+    ongId: 2,
+  },
+  {
+    id: 3,
+    name: "Mimi",
+    age: "1 ano",
+    breed: "Siamês",
+    location: "São Paulo, SP",
+    image: "/imagAnimais/gato-siames.jpg",
+    characteristics: ["Carinhosa", "Independente", "Brincalhona"],
+    bio: "Oi! Sou a Mimi e adoro brincar com bolinhas. Sou muito carinhosa mas também gosto da minha independência. Procuro uma família que me entenda!",
+    size: "Pequeno",
+    type: "cat",
+    ongId: 2,
+  },
+]
+
+const actions = []
+let nextUserId = 3
+let nextAnimalId = 4
 
 // MIME types
 const mimeTypes = {
@@ -20,11 +89,20 @@ const mimeTypes = {
 }
 
 // Create server
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const timestamp = new Date().toISOString()
   console.log(`${timestamp} - ${req.method} ${req.url}`)
 
-  let filePath = "." + req.url
+  const parsedUrl = url.parse(req.url, true)
+  const pathname = parsedUrl.pathname
+
+  // Handle API routes
+  if (pathname.startsWith("/api/")) {
+    await handleApiRequest(req, res, pathname)
+    return
+  }
+
+  let filePath = "." + pathname
 
   // Default to index.html
   if (filePath === "./") {
@@ -32,11 +110,10 @@ const server = http.createServer((req, res) => {
   }
 
   // Handle placeholder.svg requests
-  if (req.url.startsWith("/placeholder.svg")) {
-    const url = new URL(req.url, `http://localhost:${PORT}`)
-    const width = url.searchParams.get("width") || "400"
-    const height = url.searchParams.get("height") || "400"
-    const text = url.searchParams.get("text") || "Cachorro"
+  if (pathname.startsWith("/placeholder.svg")) {
+    const width = parsedUrl.query.width || "400"
+    const height = parsedUrl.query.height || "400"
+    const text = parsedUrl.query.text || "Cachorro"
 
     const svg = generatePlaceholderSVG(width, height, text)
 
@@ -89,7 +166,7 @@ const server = http.createServer((req, res) => {
             <body>
               <div class="container">
                 <h1>🐕 404 - Página não encontrada</h1>
-                <p>O arquivo <code>${req.url}</code> não foi encontrado.</p>
+                <p>O arquivo <code>${pathname}</code> não foi encontrado.</p>
                 <p><a href="/">← Voltar ao PetMatch</a></p>
               </div>
             </body>
@@ -136,6 +213,206 @@ const server = http.createServer((req, res) => {
     }
   })
 })
+
+// Handle API requests
+async function handleApiRequest(req, res, pathname) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type")
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(200)
+    res.end()
+    return
+  }
+
+  try {
+    let body = ""
+    if (req.method === "POST" || req.method === "PUT") {
+      body = await getRequestBody(req)
+    }
+
+    let response = { success: false, message: "Route not found" }
+
+    switch (pathname) {
+      case "/api/login":
+        response = handleLogin(JSON.parse(body))
+        break
+      case "/api/register":
+        response = handleRegister(JSON.parse(body))
+        break
+      case "/api/animals":
+        if (req.method === "GET") {
+          response = handleGetAnimals()
+        } else if (req.method === "POST") {
+          response = handleAddAnimal(JSON.parse(body))
+        }
+        break
+      case "/api/stats":
+        response = handleGetStats()
+        break
+      case "/api/actions":
+        if (req.method === "POST") {
+          response = handleAddAction(JSON.parse(body))
+        }
+        break
+      default:
+        if (pathname.startsWith("/api/animals/") && req.method === "DELETE") {
+          const animalId = Number.parseInt(pathname.split("/")[3])
+          response = handleDeleteAnimal(animalId)
+        }
+        break
+    }
+
+    res.writeHead(200, { "Content-Type": "application/json" })
+    res.end(JSON.stringify(response))
+  } catch (error) {
+    console.error("API Error:", error)
+    res.writeHead(500, { "Content-Type": "application/json" })
+    res.end(JSON.stringify({ success: false, message: "Internal server error" }))
+  }
+}
+
+// Get request body
+function getRequestBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = ""
+    req.on("data", (chunk) => {
+      body += chunk.toString()
+    })
+    req.on("end", () => {
+      resolve(body)
+    })
+    req.on("error", reject)
+  })
+}
+
+// API handlers
+function handleLogin(data) {
+  const { email, password } = data
+
+  const user = users.find((u) => u.email === email && u.password === password)
+
+  if (user) {
+    const { password: _, ...userWithoutPassword } = user
+    return {
+      success: true,
+      message: "Login successful",
+      user: userWithoutPassword,
+    }
+  } else {
+    return {
+      success: false,
+      message: "Email ou senha incorretos",
+    }
+  }
+}
+
+function handleRegister(data) {
+  const { name, email, phone, city, password } = data
+
+  // Check if user already exists
+  if (users.find((u) => u.email === email)) {
+    return {
+      success: false,
+      message: "Email já cadastrado",
+    }
+  }
+
+  // Create new user
+  const newUser = {
+    id: nextUserId++,
+    email,
+    password,
+    name,
+    phone,
+    city,
+    type: "client",
+  }
+
+  users.push(newUser)
+
+  const { password: _, ...userWithoutPassword } = newUser
+  return {
+    success: true,
+    message: "User registered successfully",
+    user: userWithoutPassword,
+  }
+}
+
+function handleGetAnimals() {
+  return {
+    success: true,
+    animals: animals,
+  }
+}
+
+function handleAddAnimal(data) {
+  const newAnimal = {
+    id: nextAnimalId++,
+    ...data,
+    createdAt: new Date().toISOString(),
+  }
+
+  animals.push(newAnimal)
+
+  return {
+    success: true,
+    message: "Animal added successfully",
+    animal: newAnimal,
+  }
+}
+
+function handleDeleteAnimal(animalId) {
+  const index = animals.findIndex((a) => a.id === animalId)
+
+  if (index === -1) {
+    return {
+      success: false,
+      message: "Animal not found",
+    }
+  }
+
+  animals.splice(index, 1)
+
+  return {
+    success: true,
+    message: "Animal deleted successfully",
+  }
+}
+
+function handleGetStats() {
+  const dogs = animals.filter((a) => a.type === "dog").length
+  const cats = animals.filter((a) => a.type === "cat").length
+  const adopted = actions.filter((a) => a.action === "adopt").length
+  const interested = actions.length
+
+  return {
+    success: true,
+    data: {
+      dogs,
+      cats,
+      adopted,
+      interested,
+    },
+  }
+}
+
+function handleAddAction(data) {
+  const newAction = {
+    id: actions.length + 1,
+    ...data,
+    timestamp: new Date().toISOString(),
+  }
+
+  actions.push(newAction)
+
+  return {
+    success: true,
+    message: "Action logged successfully",
+  }
+}
 
 // Generate placeholder SVG with dog themes
 function generatePlaceholderSVG(width, height, text) {
@@ -216,11 +493,9 @@ server.listen(PORT, () => {
   console.log("🐕 PetMatch Server iniciado!")
   console.log(`🐕 Acesse: http://localhost:${PORT}`)
   console.log("🐕 ================================")
-  console.log("🎮 Controles:")
-  console.log("   ← ou A = Rejeitar")
-  console.log("   → ou D = Adotar")
-  console.log("   Espaço = Adotar")
-  console.log("   Arraste = Swipe")
+  console.log("🔐 Credenciais de teste:")
+  console.log("   Cliente: cliente@petmatch.com / 123456")
+  console.log("   ONG: ong@petmatch.com / 123456")
   console.log("🐕 ================================")
   console.log("🛑 Pressione Ctrl+C para parar")
 })
