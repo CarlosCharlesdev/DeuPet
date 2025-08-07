@@ -12,6 +12,7 @@
         <div class="header">
             <h1 class="title">🐕 PetMatch</h1>
             <p class="subtitle">Encontre seu novo melhor amigo</p>
+            <button class="help-btn" id="helpBtn" title="Como funciona?">💡</button>
         </div>
 
         <!-- Card Container -->
@@ -87,6 +88,125 @@
             </div>
         </div>
     </div>
+
+    <!-- Introduction Modal -->
+    <div class="intro-modal" id="introModal">
+        <div class="intro-content">
+            <div class="intro-header">
+                <h2>🎉 Bem-vindo ao PetMatch!</h2>
+                <p>Vamos te ensinar como funciona</p>
+            </div>
+            
+            <div class="intro-steps">
+                <div class="intro-step active" data-step="1">
+                    <div class="step-icon">🐕</div>
+                    <h3>1. Conheça os Pets</h3>
+                    <p>Vai aparecer os bichinhos disponíveis para adoção. Cada um tem sua história única!</p>
+                </div>
+                
+                <div class="intro-step" data-step="2">
+                    <div class="step-icon">❤️</div>
+                    <h3>2. Escolha seu Favorito</h3>
+                    <p>Você tem opção de <strong>recusar</strong> ❌ ou <strong>adotar</strong> ❤️. Use os botões ou arraste o card!</p>
+                </div>
+                
+                <div class="intro-step" data-step="3">
+                    <div class="step-icon">📨</div>
+                    <h3>3. Solicitação Enviada</h3>
+                    <p>Uma solicitação será enviada para a ONG responsável pelo pet que você escolheu.</p>
+                </div>
+                
+                <div class="intro-step" data-step="4">
+                    <div class="step-icon">🎊</div>
+                    <h3>4. DEU PET!</h3>
+                    <p>Após a ONG aceitar, <strong>DEU PET</strong>! Um chat será aberto entre você e a ONG para acertarem os detalhes.</p>
+                </div>
+            </div>
+            
+            <div class="intro-navigation">
+                <button class="intro-btn intro-prev" id="introPrev" disabled>← Anterior</button>
+                <div class="intro-dots" id="introDots">
+                    <span class="intro-dot active" data-step="1"></span>
+                    <span class="intro-dot" data-step="2"></span>
+                    <span class="intro-dot" data-step="3"></span>
+                    <span class="intro-dot" data-step="4"></span>
+                </div>
+                <button class="intro-btn intro-next" id="introNext">Próximo →</button>
+            </div>
+            
+            <div class="intro-footer">
+                <button class="intro-start-btn" id="introStart" style="display: none;">
+                    🚀 Começar a Procurar Pets!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="intro-overlay" id="introOverlay"></div>
+
+    <!-- Pet Details Modal -->
+    <div class="pet-details-modal" id="petDetailsModal">
+        <div class="pet-details-content">
+            <div class="pet-details-header">
+                <button class="close-details-btn" id="closeDetailsBtn">✕</button>
+            </div>
+            
+            <div class="pet-details-image-container">
+                <img id="detailsPetImage" src="/placeholder.svg" alt="" class="pet-details-image">
+                <div class="pet-details-size-badge" id="detailsSizeBadge"></div>
+            </div>
+            
+            <div class="pet-details-info">
+                <div class="pet-details-name-section">
+                    <h2 class="pet-details-name" id="detailsPetName"></h2>
+                    <div class="pet-details-age">
+                        <span class="calendar-icon">📅</span>
+                        <span id="detailsPetAge"></span>
+                    </div>
+                </div>
+                
+                <div class="pet-details-basic-info">
+                    <div class="detail-info-item">
+                        <span class="info-icon">🐕</span>
+                        <span id="detailsPetBreed"></span>
+                    </div>
+                    <div class="detail-info-item">
+                        <span class="location-icon">📍</span>
+                        <span id="detailsPetLocation"></span>
+                    </div>
+                    <div class="detail-info-item">
+                        <span class="size-icon">📏</span>
+                        <span id="detailsPetSize"></span>
+                    </div>
+                </div>
+                
+                <div class="pet-details-characteristics">
+                    <h3>✨ Características</h3>
+                    <div class="details-characteristics-list" id="detailsCharacteristics"></div>
+                </div>
+                
+                <div class="pet-details-story">
+                    <h3>📖 História Completa</h3>
+                    <p class="pet-full-story" id="detailsPetBio"></p>
+                </div>
+                
+                <div class="pet-details-actions">
+                    <button class="details-reject-btn" id="detailsRejectBtn">
+                        <span class="btn-icon">❌</span>
+                        <span>Não é pra mim</span>
+                    </button>
+                    <button class="details-adopt-btn" id="detailsAdoptBtn">
+                        <span class="btn-icon">❤️</span>
+                        <span>Quero adotar!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pet Details Overlay -->
+    <div class="pet-details-overlay" id="petDetailsOverlay"></div>
 
     <script src="script.js"></script>
 </body>

@@ -880,7 +880,7 @@ body {
 .help-btn {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   background: rgba(255, 255, 255, 0.9);
   border: none;
   width: 40px;
@@ -891,6 +891,7 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+  z-index: 100;
 }
 
 .help-btn:hover {
@@ -1195,3 +1196,298 @@ button:focus:not(:focus-visible) {
 .form-input:valid {
   border-color: #10b981;
 }
+
+/* Pet Details Modal */
+.pet-details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.pet-details-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pet-details-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: white;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 2001;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.pet-details-modal.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.pet-details-content {
+  position: relative;
+}
+
+.pet-details-header {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.close-details-btn {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-details-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.pet-details-image-container {
+  position: relative;
+  height: 300px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
+
+.pet-details-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-details-size-badge {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.pet-details-info {
+  padding: 2rem;
+}
+
+.pet-details-name-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.pet-details-name {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.pet-details-age {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pet-details-basic-info {
+  margin-bottom: 2rem;
+}
+
+.detail-info-item {
+  display: flex;
+  align-items: center;
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.detail-info-item span:first-child {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.pet-details-characteristics {
+  margin-bottom: 2rem;
+}
+
+.pet-details-characteristics h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.details-characteristics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.details-characteristic-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pet-details-story {
+  margin-bottom: 2rem;
+}
+
+.pet-details-story h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.pet-full-story {
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.7;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.pet-details-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.details-reject-btn,
+.details-adopt-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.details-reject-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.details-reject-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+}
+
+.details-adopt-btn {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(81, 207, 102, 0.4);
+}
+
+.details-adopt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(81, 207, 102, 0.6);
+}
+
+/* Indicador visual de que o card é clicável */
+.main-card {
+  cursor: pointer !important;
+  position: relative;
+}
+
+/* Remover o indicador visual de clique */
+.main-card::after {
+  display: none;
+}
+
+/* Responsive para modal de detalhes */
+@media (max-width: 480px) {
+  .pet-details-modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .pet-details-info {
+    padding: 1.5rem;
+  }
+  
+  .pet-details-name-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .pet-details-name {
+    font-size: 1.75rem;
+  }
+  
+  .pet-details-actions {
+    flex-direction: column;
+  }
+  
+  .pet-details-image-container {
+    height: 250px;
+  }
+}
+
+/* Animação de entrada para o modal */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) translateY(0);
+  }
+}
+
+.pet-details-modal.active {
+  animation: modalSlideIn 0.3s ease-out;
+}
+  

@@ -29,6 +29,7 @@ let startY = 0
 let currentX = 0
 let currentY = 0
 let isDragging = false
+let hasMoved = false // Nova variável para detectar movimento
 
 // Initialize app
 async function init() {
@@ -162,6 +163,54 @@ function createProgressDots() {
   })
 }
 
+// Função para truncar texto
+function truncateText(text, maxLength = 80) {
+  if (text.length <= maxLength) return text
+  return text.substring(0, maxLength).trim() + "..."
+}
+
+// Função para mostrar modal de detalhes
+function showPetDetails(dog) {
+  const modal = document.getElementById("petDetailsModal")
+  const overlay = document.getElementById("petDetailsOverlay")
+  
+  // Preencher informações do modal
+  document.getElementById("detailsPetImage").src = dog.image || `/placeholder.svg?height=400&width=400&text=${dog.name}+${dog.breed}`
+  document.getElementById("detailsPetImage").alt = dog.name
+  document.getElementById("detailsPetName").textContent = dog.name
+  document.getElementById("detailsPetAge").textContent = dog.age
+  document.getElementById("detailsPetBreed").textContent = dog.breed
+  document.getElementById("detailsPetLocation").textContent = dog.location
+  document.getElementById("detailsPetSize").textContent = dog.size
+  document.getElementById("detailsSizeBadge").textContent = dog.size
+  document.getElementById("detailsPetBio").textContent = dog.bio
+  
+  // Preencher características
+  const detailsCharacteristics = document.getElementById("detailsCharacteristics")
+  detailsCharacteristics.innerHTML = ""
+  dog.characteristics.forEach((trait) => {
+    const badge = document.createElement("span")
+    badge.className = "details-characteristic-badge"
+    badge.textContent = trait
+    detailsCharacteristics.appendChild(badge)
+  })
+  
+  // Mostrar modal
+  modal.classList.add("active")
+  overlay.classList.add("active")
+  document.body.style.overflow = "hidden"
+}
+
+// Função para esconder modal de detalhes
+function hidePetDetails() {
+  const modal = document.getElementById("petDetailsModal")
+  const overlay = document.getElementById("petDetailsOverlay")
+  
+  modal.classList.remove("active")
+  overlay.classList.remove("active")
+  document.body.style.overflow = "auto"
+}
+
 // Display current dog
 function displayCurrentDog() {
   const dog = dogs[currentIndex]
@@ -175,7 +224,10 @@ function displayCurrentDog() {
   dogAge.textContent = dog.age
   dogBreed.textContent = dog.breed
   dogLocation.textContent = dog.location
-  dogBio.textContent = dog.bio
+  
+  // Usar texto truncado para a bio
+  dogBio.textContent = truncateText(dog.bio, 100)
+  
   sizeBadge.textContent = dog.size
 
   // Update characteristics
@@ -194,6 +246,9 @@ function displayCurrentDog() {
   dogImage.onload = () => {
     mainCard.classList.remove("loading")
   }
+  
+  // Adicionar indicador visual de que é clicável
+  mainCard.style.cursor = "pointer"
 }
 
 // Update progress dots
@@ -263,15 +318,159 @@ async function handleAction(action) {
   }, 400)
 }
 
+// Check if it's user's first time
+function checkFirstTimeUser(user) {
+  const hasSeenIntro = localStorage.getItem(`intro_seen_${user.id}`)
+  
+  if (!hasSeenIntro) {
+    showIntroduction()
+  }
+}
+
+// Show introduction modal
+function showIntroduction() {
+  const introModal = document.getElementById("introModal")
+  const introOverlay = document.getElementById("introOverlay")
+  
+  introModal.classList.add("active")
+  introOverlay.classList.add("active")
+  
+  // Disable body scroll
+  document.body.style.overflow = "hidden"
+}
+
+// Hide introduction modal
+function hideIntroduction() {
+  const introModal = document.getElementById("introModal")
+  const introOverlay = document.getElementById("introOverlay")
+  
+  introModal.classList.remove("active")
+  introOverlay.classList.remove("active")
+  
+  // Re-enable body scroll
+  document.body.style.overflow = "auto"
+  
+  // Mark as seen
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+  localStorage.setItem(`intro_seen_${currentUser.id}`, "true")
+}
+
+// Setup introduction navigation
+function setupIntroNavigation() {
+  const prevBtn = document.getElementById("introPrev")
+  const nextBtn = document.getElementById("introNext")
+  const startBtn = document.getElementById("introStart")
+  const dots = document.querySelectorAll(".intro-dot")
+  const steps = document.querySelectorAll(".intro-step")
+  
+  let currentStep = 1
+  const totalSteps = 4
+  
+  function updateStep(step) {
+    // Hide all steps
+    steps.forEach(s => s.classList.remove("active"))
+    dots.forEach(d => d.classList.remove("active"))
+    
+    // Show current step
+    document.querySelector(`[data-step="${step}"]`).classList.add("active")
+    document.querySelector(`.intro-dot[data-step="${step}"]`).classList.add("active")
+    
+    // Update buttons
+    prevBtn.disabled = step === 1
+    
+    if (step === totalSteps) {
+      nextBtn.style.display = "none"
+      startBtn.style.display = "block"
+    } else {
+      nextBtn.style.display = "block"
+      startBtn.style.display = "none"
+    }
+    
+    currentStep = step
+  }
+  
+  // Previous button
+  prevBtn.addEventListener("click", () => {
+    if (currentStep > 1) {
+      updateStep(currentStep - 1)
+    }
+  })
+  
+  // Next button
+  nextBtn.addEventListener("click", () => {
+    if (currentStep < totalSteps) {
+      updateStep(currentStep + 1)
+    }
+  })
+  
+  // Start button
+  startBtn.addEventListener("click", () => {
+    hideIntroduction()
+  })
+  
+  // Dots navigation
+  dots.forEach(dot => {
+    dot.addEventListener("click", () => {
+      const step = parseInt(dot.dataset.step)
+      updateStep(step)
+    })
+  })
+  
+  // Close on overlay click
+  document.getElementById("introOverlay").addEventListener("click", () => {
+    hideIntroduction()
+  })
+}
+
 // Setup event listeners
 function setupEventListeners() {
   // Button clicks
   rejectBtn.addEventListener("click", () => handleAction("reject"))
   adoptBtn.addEventListener("click", () => handleAction("adopt"))
 
+  // Help button
+  document.getElementById("helpBtn").addEventListener("click", () => {
+    showIntroduction()
+  })
+
+  // Card click para mostrar detalhes - APENAS se não houve drag
+  mainCard.addEventListener("click", (e) => {
+    // Não abrir se estiver arrastando, animando ou se houve movimento
+    if (isDragging || isAnimating || hasMoved) return
+    
+    // Verificar se não clicou nos botões de ação
+    if (e.target.closest('.action-btn')) return
+    
+    showPetDetails(dogs[currentIndex])
+  })
+
+  // Modal de detalhes - botões de fechar
+  document.getElementById("closeDetailsBtn").addEventListener("click", hidePetDetails)
+  document.getElementById("petDetailsOverlay").addEventListener("click", hidePetDetails)
+  
+  // Modal de detalhes - botões de ação
+  document.getElementById("detailsRejectBtn").addEventListener("click", () => {
+    hidePetDetails()
+    setTimeout(() => handleAction("reject"), 300)
+  })
+  
+  document.getElementById("detailsAdoptBtn").addEventListener("click", () => {
+    hidePetDetails()
+    setTimeout(() => handleAction("adopt"), 300)
+  })
+
+  // Setup introduction navigation
+  setupIntroNavigation()
+
   // Keyboard shortcuts
   document.addEventListener("keydown", (e) => {
     if (isAnimating) return
+    
+    // Fechar modal com ESC
+    if (e.key === "Escape") {
+      hidePetDetails()
+      return
+    }
 
     if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
       handleAction("reject")
@@ -301,6 +500,7 @@ function handleTouchStart(e) {
   startX = e.touches[0].clientX
   startY = e.touches[0].clientY
   isDragging = true
+  hasMoved = false // Reset movimento
 }
 
 // Touch move
@@ -313,6 +513,11 @@ function handleTouchMove(e) {
 
   const diffX = currentX - startX
   const diffY = currentY - startY
+
+  // Marcar que houve movimento se passou de um threshold mínimo
+  if (Math.abs(diffX) > 10 || Math.abs(diffY) > 10) {
+    hasMoved = true
+  }
 
   // Only allow horizontal swipe if it's more significant than vertical
   if (Math.abs(diffX) > Math.abs(diffY)) {
@@ -348,6 +553,11 @@ function handleTouchEnd(e) {
   startY = 0
   currentX = 0
   currentY = 0
+  
+  // Reset movimento após um pequeno delay para não interferir com clique
+  setTimeout(() => {
+    hasMoved = false
+  }, 100)
 }
 
 // Mouse events (for desktop drag)
@@ -357,6 +567,7 @@ function handleMouseDown(e) {
   startX = e.clientX
   startY = e.clientY
   isDragging = true
+  hasMoved = false // Reset movimento
   e.preventDefault()
 }
 
@@ -368,6 +579,11 @@ function handleMouseMove(e) {
 
   const diffX = currentX - startX
   const diffY = currentY - startY
+
+  // Marcar que houve movimento se passou de um threshold mínimo
+  if (Math.abs(diffX) > 10 || Math.abs(diffY) > 10) {
+    hasMoved = true
+  }
 
   if (Math.abs(diffX) > Math.abs(diffY)) {
     const rotation = diffX * 0.1
@@ -399,6 +615,11 @@ function handleMouseUp(e) {
   startY = 0
   currentX = 0
   currentY = 0
+  
+  // Reset movimento após um pequeno delay para não interferir com clique
+  setTimeout(() => {
+    hasMoved = false
+  }, 100)
 }
 
 // Start the app when DOM is loaded
