@@ -208,6 +208,57 @@
     <!-- Pet Details Overlay -->
     <div class="pet-details-overlay" id="petDetailsOverlay"></div>
 
+    <!-- DEU PET Modal -->
+    <div class="deu-pet-modal" id="deuPetModal">
+        <div class="deu-pet-content">
+            <div class="deu-pet-celebration">
+                <div class="celebration-icon">🎉</div>
+                <h2 class="deu-pet-title">DEU PET!</h2>
+                <p class="deu-pet-message">Parabéns! Você demonstrou interesse em adotar <span id="adoptedPetName"></span>!</p>
+                <div class="deu-pet-next-steps">
+                    <p>A ONG responsável foi notificada e em breve entrará em contato com você.</p>
+                    <button class="open-chat-btn" id="openChatBtn">
+                        💬 Conversar com a ONG
+                    </button>
+                    <button class="continue-btn" id="continueBtn">
+                        ➡️ Continuar procurando
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEU PET Overlay -->
+    <div class="deu-pet-overlay" id="deuPetOverlay"></div>
+
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-content">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="ong-avatar">🏢</div>
+                    <div class="ong-info">
+                        <h3 id="ongName">ONG Amigos dos Animais</h3>
+                        <span class="ong-status">Online</span>
+                    </div>
+                </div>
+                <button class="close-chat-btn" id="closeChatBtn">✕</button>
+            </div>
+        
+            <div class="chat-messages" id="chatMessages">
+                <!-- Mensagens aparecerão aqui -->
+            </div>
+        
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Digite sua mensagem...">
+                <button class="send-btn" id="sendBtn">📤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Overlay -->
+    <div class="chat-overlay" id="chatOverlay"></div>
+
     <script src="script.js"></script>
 </body>
 </html>

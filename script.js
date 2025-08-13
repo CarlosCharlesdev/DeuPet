@@ -29,7 +29,7 @@ let startY = 0
 let currentX = 0
 let currentY = 0
 let isDragging = false
-let hasMoved = false // Nova variável para detectar movimento
+let hasMoved = false
 
 // Initialize app
 async function init() {
@@ -269,9 +269,20 @@ async function handleAction(action) {
   if (action === "adopt") {
     adoptedCount++
     mainCard.classList.add("swipe-right")
+    
+    // Mostrar DEU PET em vez de continuar imediatamente
+    setTimeout(() => {
+      showDeuPetCelebration(dogs[currentIndex])
+    }, 500)
+    
   } else {
     rejectedCount++
     mainCard.classList.add("swipe-left")
+    
+    // Para rejeição, continua o fluxo normal
+    setTimeout(() => {
+      continueToNextPet()
+    }, 400)
   }
 
   saveStats()
@@ -299,29 +310,163 @@ async function handleAction(action) {
   }
 
   console.log(`${action === "adopt" ? "❤️ Adotado" : "❌ Rejeitado"}: ${dogs[currentIndex].name}`)
+}
 
+// Nova função para continuar para o próximo pet
+function continueToNextPet() {
+  // Remove animation classes
+  mainCard.classList.remove("swipe-left", "swipe-right", "animating")
+
+  // Move to next dog
+  currentIndex = (currentIndex + 1) % dogs.length
+
+  // Display new dog
+  displayCurrentDog()
+
+  // Re-enable buttons
+  rejectBtn.disabled = false
+  adoptBtn.disabled = false
+
+  isAnimating = false
+}
+
+// Função para mostrar celebração DEU PET
+function showDeuPetCelebration(adoptedPet) {
+  const modal = document.getElementById("deuPetModal")
+  const overlay = document.getElementById("deuPetOverlay")
+  
+  // Preencher nome do pet adotado
+  document.getElementById("adoptedPetName").textContent = adoptedPet.name
+  
+  // Mostrar modal
+  modal.classList.add("active")
+  overlay.classList.add("active")
+  document.body.style.overflow = "hidden"
+  
+  // Adicionar confetes (efeito visual)
+  createConfetti()
+}
+
+// Função para esconder celebração DEU PET
+function hideDeuPetCelebration() {
+  const modal = document.getElementById("deuPetModal")
+  const overlay = document.getElementById("deuPetOverlay")
+  
+  modal.classList.remove("active")
+  overlay.classList.remove("active")
+  document.body.style.overflow = "auto"
+}
+
+// Função para criar efeito de confetes
+function createConfetti() {
+  const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff']
+  
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement('div')
+      confetti.className = 'confetti'
+      confetti.style.left = Math.random() * 100 + 'vw'
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+      confetti.style.animationDelay = Math.random() * 3 + 's'
+      document.body.appendChild(confetti)
+      
+      // Remove confetti after animation
+      setTimeout(() => {
+        confetti.remove()
+      }, 3000)
+    }, i * 50)
+  }
+}
+
+// Função para abrir chat
+function openChat(adoptedPet) {
+  const modal = document.getElementById("chatModal")
+  const overlay = document.getElementById("chatOverlay")
+  
+  // Limpar mensagens anteriores
+  const messagesContainer = document.getElementById("chatMessages")
+  messagesContainer.innerHTML = ""
+  
+  // Adicionar mensagem inicial da ONG
+  addMessage("ong", `Olá! Que bom que você se interessou pelo ${adoptedPet.name}! 🐕`, "ONG Amigos dos Animais")
+  addMessage("ong", "Vamos conversar sobre o processo de adoção. Você tem alguma pergunta sobre o pet?", "ONG Amigos dos Animais")
+  
+  // Mostrar modal
+  modal.classList.add("active")
+  overlay.classList.add("active")
+  document.body.style.overflow = "hidden"
+  
+  // Focar no input
+  document.getElementById("chatInput").focus()
+}
+
+// Função para fechar chat
+function closeChat() {
+  const modal = document.getElementById("chatModal")
+  const overlay = document.getElementById("chatOverlay")
+  
+  modal.classList.remove("active")
+  overlay.classList.remove("active")
+  document.body.style.overflow = "auto"
+}
+
+// Função para adicionar mensagem ao chat
+function addMessage(sender, message, senderName = "") {
+  const messagesContainer = document.getElementById("chatMessages")
+  const messageDiv = document.createElement("div")
+  messageDiv.className = `message ${sender}-message`
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+  const displayName = sender === "user" ? currentUser.name : senderName
+  
+  messageDiv.innerHTML = `
+    <div class="message-avatar">${sender === "user" ? "👤" : "🏢"}</div>
+    <div class="message-content">
+      <div class="message-header">
+        <span class="sender-name">${displayName}</span>
+        <span class="message-time">${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+      </div>
+      <div class="message-text">${message}</div>
+    </div>
+  `
+  
+  messagesContainer.appendChild(messageDiv)
+  messagesContainer.scrollTop = messagesContainer.scrollHeight
+}
+
+// Função para enviar mensagem
+function sendMessage() {
+  const input = document.getElementById("chatInput")
+  const message = input.value.trim()
+  
+  if (message === "") return
+  
+  // Adicionar mensagem do usuário
+  addMessage("user", message)
+  
+  // Limpar input
+  input.value = ""
+  
+  // Simular resposta da ONG após um delay
   setTimeout(() => {
-    // Remove animation classes
-    mainCard.classList.remove("swipe-left", "swipe-right", "animating")
-
-    // Move to next dog
-    currentIndex = (currentIndex + 1) % dogs.length
-
-    // Display new dog
-    displayCurrentDog()
-
-    // Re-enable buttons
-    rejectBtn.disabled = false
-    adoptBtn.disabled = false
-
-    isAnimating = false
-  }, 400)
+    const responses = [
+      "Obrigado pela mensagem! Vou verificar essas informações para você.",
+      "Que ótima pergunta! O processo de adoção é bem simples.",
+      "Fico feliz em saber do seu interesse! Vamos agendar uma visita?",
+      "Perfeito! Vou te enviar mais detalhes sobre o pet.",
+      "Excelente! Você parece ser uma pessoa muito cuidadosa.",
+      "Vou anotar essas informações. Tem mais alguma dúvida?"
+    ]
+    
+    const randomResponse = responses[Math.floor(Math.random() * responses.length)]
+    addMessage("ong", randomResponse, "ONG Amigos dos Animais")
+  }, 1000 + Math.random() * 2000)
 }
 
 // Check if it's user's first time
 function checkFirstTimeUser(user) {
   const hasSeenIntro = localStorage.getItem(`intro_seen_${user.id}`)
-  
+
   if (!hasSeenIntro) {
     showIntroduction()
   }
@@ -331,10 +476,10 @@ function checkFirstTimeUser(user) {
 function showIntroduction() {
   const introModal = document.getElementById("introModal")
   const introOverlay = document.getElementById("introOverlay")
-  
+
   introModal.classList.add("active")
   introOverlay.classList.add("active")
-  
+
   // Disable body scroll
   document.body.style.overflow = "hidden"
 }
@@ -343,13 +488,13 @@ function showIntroduction() {
 function hideIntroduction() {
   const introModal = document.getElementById("introModal")
   const introOverlay = document.getElementById("introOverlay")
-  
+
   introModal.classList.remove("active")
   introOverlay.classList.remove("active")
-  
+
   // Re-enable body scroll
   document.body.style.overflow = "auto"
-  
+
   // Mark as seen
   const currentUser = JSON.parse(localStorage.getItem("currentUser"))
   localStorage.setItem(`intro_seen_${currentUser.id}`, "true")
@@ -362,10 +507,10 @@ function setupIntroNavigation() {
   const startBtn = document.getElementById("introStart")
   const dots = document.querySelectorAll(".intro-dot")
   const steps = document.querySelectorAll(".intro-step")
-  
+
   let currentStep = 1
   const totalSteps = 4
-  
+
   function updateStep(step) {
     // Hide all steps
     steps.forEach(s => s.classList.remove("active"))
@@ -388,26 +533,26 @@ function setupIntroNavigation() {
     
     currentStep = step
   }
-  
+
   // Previous button
   prevBtn.addEventListener("click", () => {
     if (currentStep > 1) {
       updateStep(currentStep - 1)
     }
   })
-  
+
   // Next button
   nextBtn.addEventListener("click", () => {
     if (currentStep < totalSteps) {
       updateStep(currentStep + 1)
     }
   })
-  
+
   // Start button
   startBtn.addEventListener("click", () => {
     hideIntroduction()
   })
-  
+
   // Dots navigation
   dots.forEach(dot => {
     dot.addEventListener("click", () => {
@@ -415,7 +560,7 @@ function setupIntroNavigation() {
       updateStep(step)
     })
   })
-  
+
   // Close on overlay click
   document.getElementById("introOverlay").addEventListener("click", () => {
     hideIntroduction()
@@ -462,6 +607,32 @@ function setupEventListeners() {
   // Setup introduction navigation
   setupIntroNavigation()
 
+  // DEU PET modal - botões
+  document.getElementById("openChatBtn").addEventListener("click", () => {
+    hideDeuPetCelebration()
+    setTimeout(() => {
+      openChat(dogs[currentIndex])
+    }, 300)
+  })
+
+  document.getElementById("continueBtn").addEventListener("click", () => {
+    hideDeuPetCelebration()
+    setTimeout(() => {
+      continueToNextPet()
+    }, 300)
+  })
+
+  // Chat modal - controles
+  document.getElementById("closeChatBtn").addEventListener("click", closeChat)
+  document.getElementById("chatOverlay").addEventListener("click", closeChat)
+
+  document.getElementById("sendBtn").addEventListener("click", sendMessage)
+  document.getElementById("chatInput").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      sendMessage()
+    }
+  })
+
   // Keyboard shortcuts
   document.addEventListener("keydown", (e) => {
     if (isAnimating) return
@@ -500,7 +671,7 @@ function handleTouchStart(e) {
   startX = e.touches[0].clientX
   startY = e.touches[0].clientY
   isDragging = true
-  hasMoved = false // Reset movimento
+  hasMoved = false
 }
 
 // Touch move
@@ -567,7 +738,7 @@ function handleMouseDown(e) {
   startX = e.clientX
   startY = e.clientY
   isDragging = true
-  hasMoved = false // Reset movimento
+  hasMoved = false
   e.preventDefault()
 }
 

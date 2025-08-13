@@ -7,79 +7,290 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="auth-page">
-    <div class="login-container">
-        <div class="login-card">
-            <!-- Header -->
-            <div class="login-header">
-                <h1 class="login-title">🐕 PetMatch</h1>
-                <p class="login-subtitle">Faça login para continuar</p>
+    <div class="modern-login-container">
+        <!-- Background Elements -->
+        <div class="login-bg-elements">
+            <div class="floating-element element-1">🐕</div>
+            <div class="floating-element element-2">🐱</div>
+            <div class="floating-element element-3">❤️</div>
+            <div class="floating-element element-4">🏠</div>
+            <div class="floating-element element-5">🎾</div>
+            <div class="floating-element element-6">🦴</div>
+        </div>
+
+        <div class="modern-login-card">
+            <!-- Header com Logo -->
+            <div class="modern-login-header">
+                <div class="logo-container">
+                    <div class="logo-icon">🐕</div>
+                    <h1 class="modern-login-title">PetMatch</h1>
+                </div>
+                <p class="modern-login-subtitle">Conectando corações e patinhas</p>
             </div>
 
             <!-- Login Form -->
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        class="form-input" 
-                        placeholder="seu@email.com"
-                        required
-                    >
+            <form class="modern-login-form" id="loginForm">
+                <div class="input-group">
+                    <div class="input-container">
+                        <span class="input-icon">📧</span>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="modern-input" 
+                            placeholder="Digite seu email"
+                            required
+                        >
+                        <label class="floating-label">Email</label>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="password" class="form-label">Senha</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="form-input" 
-                        placeholder="••••••••"
-                        required
-                    >
+                <div class="input-group">
+                    <div class="input-container">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="modern-input" 
+                            placeholder="Digite sua senha"
+                            required
+                        >
+                        <label class="floating-label">Senha</label>
+                        <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="checkbox-label">
+                <div class="form-options">
+                    <label class="modern-checkbox">
                         <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span class="checkmark"></span>
                         <span class="checkbox-text">Lembrar de mim</span>
                     </label>
+                    <a href="#" class="forgot-password">Esqueci minha senha</a>
                 </div>
 
-                <button type="submit" class="login-btn" id="loginBtn">
-                    <span class="btn-text">Entrar</span>
-                    <span class="btn-loading" style="display: none;">Entrando...</span>
+                <button type="submit" class="modern-login-btn" id="loginBtn">
+                    <span class="btn-content">
+                        <span class="btn-text">Entrar</span>
+                        <span class="btn-loading" style="display: none;">
+                            <div class="loading-spinner"></div>
+                            Entrando...
+                        </span>
+                    </span>
+                    <div class="btn-ripple"></div>
                 </button>
 
-                <div class="form-divider">
+                <div class="divider">
                     <span>ou</span>
                 </div>
 
-                <button type="button" class="register-btn" id="registerBtn">
+                <button type="button" class="modern-register-btn" id="registerBtn">
+                    <span class="register-icon">👤</span>
                     Criar conta como Cliente
                 </button>
             </form>
 
             <!-- Demo Credentials -->
-            <div class="demo-credentials">
-                <h3>🧪 Credenciais de Teste</h3>
-                <div class="demo-item">
-                    <strong>Cliente:</strong>
-                    <span>cliente@petmatch.com / 123456</span>
-                </div>
-                <div class="demo-item">
-                    <strong>ONG:</strong>
-                    <span>ong@petmatch.com / 123456</span>
+            <div class="demo-section">
+                <h3>🧪 Contas de Demonstração</h3>
+                <div class="demo-accounts">
+                    <div class="demo-account" onclick="fillDemo('client')">
+                        <div class="demo-avatar">👤</div>
+                        <div class="demo-info">
+                            <strong>Cliente</strong>
+                            <span>cliente@petmatch.com</span>
+                        </div>
+                        <div class="demo-action">Usar</div>
+                    </div>
+                    <div class="demo-account" onclick="fillDemo('ong')">
+                        <div class="demo-avatar">🏢</div>
+                        <div class="demo-info">
+                            <strong>ONG</strong>
+                            <span>ong@petmatch.com</span>
+                        </div>
+                        <div class="demo-action">Usar</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Error Message -->
-            <div class="error-message" id="errorMessage" style="display: none;"></div>
+            <div class="modern-error-message" id="errorMessage" style="display: none;"></div>
         </div>
     </div>
 
-    <script src="login.js"></script>
+    <script>
+// Toggle password visibility
+document.getElementById("togglePassword").addEventListener("click", function () {
+  const passwordInput = document.getElementById("password")
+  
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text"
+    this.textContent = "🙈"
+  } else {
+    passwordInput.type = "password"
+    this.textContent = "👁️"
+  }
+})
+
+// Fill demo credentials
+function fillDemo(type) {
+  const emailInput = document.getElementById("email")
+  const passwordInput = document.getElementById("password")
+
+  if (type === "client") {
+    emailInput.value = "cliente@petmatch.com"
+  } else {
+    emailInput.value = "ong@petmatch.com"
+  }
+
+  passwordInput.value = "123456"
+
+  // Add focus effect
+  emailInput.classList.add("has-value")
+  passwordInput.classList.add("has-value")
+}
+
+// Handle input focus effects
+document.querySelectorAll(".modern-input").forEach((input) => {
+  input.addEventListener("focus", function () {
+    this.parentElement.classList.add("focused")
+  })
+
+  input.addEventListener("blur", function () {
+    this.parentElement.classList.remove("focused")
+    if (this.value) {
+      this.classList.add("has-value")
+    } else {
+      this.classList.remove("has-value")
+    }
+  })
+
+  input.addEventListener("input", function () {
+    if (this.value) {
+      this.classList.add("has-value")
+    } else {
+      this.classList.remove("has-value")
+    }
+  })
+})
+
+// Ripple effect for buttons
+document.querySelectorAll(".modern-login-btn, .modern-register-btn").forEach((button) => {
+  button.addEventListener("click", function (e) {
+    const ripple = this.querySelector(".btn-ripple") || document.createElement("div")
+    ripple.className = "btn-ripple"
+
+    const rect = this.getBoundingClientRect()
+    const size = Math.max(rect.width, rect.height)
+    const x = e.clientX - rect.left - size / 2
+    const y = e.clientY - rect.top - size / 2
+
+    ripple.style.width = ripple.style.height = size + "px"
+    ripple.style.left = x + "px"
+    ripple.style.top = y + "px"
+
+    if (!this.querySelector(".btn-ripple")) {
+      this.appendChild(ripple)
+    }
+
+    ripple.classList.add("animate")
+
+    setTimeout(() => {
+      ripple.classList.remove("animate")
+    }, 600)
+  })
+})
+
+// Handle login form submission
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+  e.preventDefault()
+  
+  const email = document.getElementById("email").value
+  const password = document.getElementById("password").value
+  const loginBtn = document.getElementById("loginBtn")
+  const errorMessage = document.getElementById("errorMessage")
+  
+  // Show loading state
+  loginBtn.disabled = true
+  loginBtn.querySelector(".btn-text").style.display = "none"
+  loginBtn.querySelector(".btn-loading").style.display = "inline-flex"
+  
+  // Hide previous error
+  errorMessage.style.display = "none"
+  
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      // Store user data
+      localStorage.setItem("currentUser", JSON.stringify(result.user))
+      
+      // Redirect based on user type
+      if (result.user.type === "ong") {
+        window.location.href = "/admin.html"
+      } else {
+        window.location.href = "/index.html"
+      }
+    } else {
+      // Show error message
+      errorMessage.textContent = result.message || "Erro ao fazer login"
+      errorMessage.style.display = "block"
+    }
+  } catch (error) {
+    console.error("Login error:", error)
+    
+    // Fallback authentication for demo
+    const users = [
+      {
+        id: 1,
+        name: "João Silva",
+        email: "cliente@petmatch.com",
+        type: "client"
+      },
+      {
+        id: 2,
+        name: "ONG Amigos dos Animais",
+        email: "ong@petmatch.com",
+        type: "ong"
+      }
+    ]
+    
+    const user = users.find(u => u.email === email && password === "123456")
+    
+    if (user) {
+      localStorage.setItem("currentUser", JSON.stringify(user))
+      
+      if (user.type === "ong") {
+        window.location.href = "/admin.html"
+      } else {
+        window.location.href = "/index.html"
+      }
+    } else {
+      errorMessage.textContent = "Email ou senha incorretos"
+      errorMessage.style.display = "block"
+    }
+  } finally {
+    // Reset loading state
+    loginBtn.disabled = false
+    loginBtn.querySelector(".btn-text").style.display = "inline"
+    loginBtn.querySelector(".btn-loading").style.display = "none"
+  }
+})
+
+// Handle register button
+document.getElementById("registerBtn").addEventListener("click", function() {
+  // For now, just redirect to register page or show message
+  alert("Funcionalidade de registro será implementada em breve!")
+})
+</script>
 </body>
 </html>
