@@ -2403,3 +2403,8 @@ button:focus:not(:focus-visible) {
 .pet-details-modal.active {
   animation: modalSlideIn 0.3s ease-out;
 }
+.action-btn img.btn-icon {
+  width: 32px;   /* ajuste o tamanho que quiser */
+  height: 32px;
+  object-fit: contain; /* mantém proporção da imagem */
+}
