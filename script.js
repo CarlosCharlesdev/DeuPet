@@ -500,65 +500,12 @@ function hideIntroduction() {
   localStorage.setItem(`intro_seen_${currentUser.id}`, "true")
 }
 
-// Setup introduction navigation
 function setupIntroNavigation() {
-  const prevBtn = document.getElementById("introPrev")
-  const nextBtn = document.getElementById("introNext")
   const startBtn = document.getElementById("introStart")
-  const dots = document.querySelectorAll(".intro-dot")
-  const steps = document.querySelectorAll(".intro-step")
-
-  let currentStep = 1
-  const totalSteps = 4
-
-  function updateStep(step) {
-    // Hide all steps
-    steps.forEach(s => s.classList.remove("active"))
-    dots.forEach(d => d.classList.remove("active"))
-    
-    // Show current step
-    document.querySelector(`[data-step="${step}"]`).classList.add("active")
-    document.querySelector(`.intro-dot[data-step="${step}"]`).classList.add("active")
-    
-    // Update buttons
-    prevBtn.disabled = step === 1
-    
-    if (step === totalSteps) {
-      nextBtn.style.display = "none"
-      startBtn.style.display = "block"
-    } else {
-      nextBtn.style.display = "block"
-      startBtn.style.display = "none"
-    }
-    
-    currentStep = step
-  }
-
-  // Previous button
-  prevBtn.addEventListener("click", () => {
-    if (currentStep > 1) {
-      updateStep(currentStep - 1)
-    }
-  })
-
-  // Next button
-  nextBtn.addEventListener("click", () => {
-    if (currentStep < totalSteps) {
-      updateStep(currentStep + 1)
-    }
-  })
 
   // Start button
   startBtn.addEventListener("click", () => {
     hideIntroduction()
-  })
-
-  // Dots navigation
-  dots.forEach(dot => {
-    dot.addEventListener("click", () => {
-      const step = parseInt(dot.dataset.step)
-      updateStep(step)
-    })
   })
 
   // Close on overlay click
@@ -578,16 +525,64 @@ function setupEventListeners() {
     showIntroduction()
   })
 
-  // Card click para mostrar detalhes - APENAS se não houve drag
-  mainCard.addEventListener("click", (e) => {
-    // Não abrir se estiver arrastando, animando ou se houve movimento
-    if (isDragging || isAnimating || hasMoved) return
-    
-    // Verificar se não clicou nos botões de ação
-    if (e.target.closest('.action-btn')) return
-    
-    showPetDetails(dogs[currentIndex])
-  })
+// Clique x Swipe (Mouse unificado)
+let clickStartX = 0
+let clickStartY = 0
+let clickMoved = false
+let isClick = false
+
+mainCard.addEventListener("mousedown", (e) => {
+  if (isAnimating) return
+  clickStartX = e.clientX
+  clickStartY = e.clientY
+  clickMoved = false
+  isClick = true
+  isDragging = true
+})
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging || isAnimating) return
+
+  const diffX = e.clientX - clickStartX
+  const diffY = e.clientY - clickStartY
+
+  if (Math.abs(diffX) > 10 || Math.abs(diffY) > 10) {
+    clickMoved = true
+    isClick = false
+  }
+
+  if (Math.abs(diffX) > Math.abs(diffY)) {
+    const rotation = diffX * 0.1
+    const opacity = 1 - Math.abs(diffX) / 300
+    mainCard.style.transform = `translateX(${diffX}px) rotate(${rotation}deg)`
+    mainCard.style.opacity = opacity
+  }
+})
+
+document.addEventListener("mouseup", (e) => {
+  if (!isDragging || isAnimating) return
+  isDragging = false
+
+  const diffX = e.clientX - clickStartX
+
+  // Reset transform
+  mainCard.style.transform = ""
+  mainCard.style.opacity = ""
+
+  if (isClick && !clickMoved) {
+    if (!e.target.closest(".action-btn")) {
+      showPetDetails(dogs[currentIndex]) // só expande
+    }
+  } else if (Math.abs(diffX) > 100) {
+    if (diffX > 0) {
+      handleAction("adopt")
+    } else {
+      handleAction("reject")
+    }
+  }
+
+  isClick = false
+})
 
   // Modal de detalhes - botões de fechar
   document.getElementById("closeDetailsBtn").addEventListener("click", hidePetDetails)
@@ -658,10 +653,6 @@ function setupEventListeners() {
   mainCard.addEventListener("touchmove", handleTouchMove, { passive: false })
   mainCard.addEventListener("touchend", handleTouchEnd, { passive: false })
 
-  // Mouse events for drag (desktop)
-  mainCard.addEventListener("mousedown", handleMouseDown)
-  document.addEventListener("mousemove", handleMouseMove)
-  document.addEventListener("mouseup", handleMouseUp)
 }
 
 // Touch start
