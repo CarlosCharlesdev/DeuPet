@@ -608,6 +608,7 @@ document.addEventListener("mouseup", (e) => {
     setTimeout(() => {
       openChat(dogs[currentIndex])
     }, 300)
+    continueToNextPet()
   })
 
   document.getElementById("continueBtn").addEventListener("click", () => {
