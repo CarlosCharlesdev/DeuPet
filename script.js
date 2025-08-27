@@ -784,6 +784,86 @@ function handleMouseUp(e) {
   }, 100)
 }
 
+// Setup introduction navigation - VERSÃO COMPLETA
+function setupIntroNavigation() {
+  const prevBtn = document.getElementById("introPrev")
+  const nextBtn = document.getElementById("introNext")
+  const startBtn = document.getElementById("introStart")
+  const dots = document.querySelectorAll(".intro-dot")
+  const steps = document.querySelectorAll(".intro-step")
+
+  let currentStep = 1
+  const totalSteps = 4
+
+  function updateStep(step) {
+    console.log(`🔄 Mudando para step ${step}`)
+
+    // Hide all steps
+    steps.forEach((s) => s.classList.remove("active"))
+    dots.forEach((d) => d.classList.remove("active"))
+
+    // Show current step
+    const currentStepEl = document.querySelector(`[data-step="${step}"]`)
+    const currentDotEl = document.querySelector(`.intro-dot[data-step="${step}"]`)
+
+    if (currentStepEl) currentStepEl.classList.add("active")
+    if (currentDotEl) currentDotEl.classList.add("active")
+
+    // Update buttons
+    prevBtn.disabled = step === 1
+
+    if (step === totalSteps) {
+      nextBtn.style.display = "none"
+      startBtn.style.display = "block"
+    } else {
+      nextBtn.style.display = "block"
+      startBtn.style.display = "none"
+    }
+
+    currentStep = step
+  }
+
+  // Previous button
+  prevBtn.addEventListener("click", () => {
+    console.log("⬅️ Clicou em Anterior")
+    if (currentStep > 1) {
+      updateStep(currentStep - 1)
+    }
+  })
+
+  // Next button
+  nextBtn.addEventListener("click", () => {
+    console.log("➡️ Clicou em Próximo")
+    if (currentStep < totalSteps) {
+      updateStep(currentStep + 1)
+    }
+  })
+
+  // Start button
+  startBtn.addEventListener("click", () => {
+    console.log("🚀 Clicou em Começar")
+    hideIntroduction()
+  })
+
+  // Dots navigation
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const step = Number.parseInt(dot.dataset.step)
+      console.log(`🎯 Clicou no dot ${step}`)
+      updateStep(step)
+    })
+  })
+
+  // Close on overlay click
+  document.getElementById("introOverlay").addEventListener("click", () => {
+    console.log("❌ Clicou no overlay para fechar")
+    hideIntroduction()
+  })
+
+  // Initialize first step
+  updateStep(1)
+}
+
 // Start the app when DOM is loaded
 document.addEventListener("DOMContentLoaded", init)
 
