@@ -6,9 +6,8 @@
     <title>🏢 PetMatch - Painel ONG</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="imagAnimais/LogoL&C.jpg">
-
 </head>
-<body>
+<body class="admin-page">
     <div class="admin-container">
         <!-- Header -->
         <header class="admin-header">
@@ -131,6 +130,72 @@
                     <!-- Animals will be loaded here -->
                 </div>
             </div>
+
+            <!-- Matches and Chats Section -->
+            <div class="admin-section">
+                <h2 class="section-title">💕 Matches e Chats</h2>
+                <div class="matches-container">
+                    <div class="matches-tabs">
+                        <button class="tab-btn active" id="matchesTab">
+                            <span class="tab-icon">❤️</span>
+                            <span>Matches Recentes</span>
+                            <span class="tab-badge" id="matchesBadge">0</span>
+                        </button>
+                        <button class="tab-btn" id="chatsTab">
+                            <span class="tab-icon">💬</span>
+                            <span>Chats Ativos</span>
+                            <span class="tab-badge" id="chatsBadge">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Matches Tab Content -->    
+                    <div class="tab-content active" id="matchesContent">
+                        <div class="matches-grid" id="matchesGrid">
+                            <!-- Matches will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Chats Tab Content -->
+                    <div class="tab-content" id="chatsContent">
+                        <div class="chats-list" id="chatsList">
+                            <!-- Active chats will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Modal for ONG -->
+            <div class="ong-chat-modal" id="ongChatModal">
+                <div class="ong-chat-content">
+                    <div class="ong-chat-header">
+                        <div class="chat-pet-info">
+                            <img id="chatPetImage" src="/placeholder.svg" alt="" class="chat-pet-avatar">
+                            <div class="chat-pet-details">
+                                <h3 id="chatPetName">Pet Name</h3>
+                                <p id="chatClientName">Cliente</p>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="chat-action-btn approve-btn" id="approveAdoptionBtn">
+                                <span>✅ Aprovar Adoção</span>
+                            </button>
+                            <button class="chat-action-btn close-chat-btn" id="closeOngChatBtn">✕</button>
+                        </div>
+                    </div>
+                
+                    <div class="ong-chat-messages" id="ongChatMessages">
+                        <!-- Messages will appear here -->
+                    </div>
+                
+                    <div class="ong-chat-input-container">
+                        <input type="text" id="ongChatInput" class="ong-chat-input" placeholder="Digite sua mensagem...">
+                        <button class="ong-send-btn" id="ongSendBtn">📤</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Overlay -->
+            <div class="ong-chat-overlay" id="ongChatOverlay"></div>
         </main>
     </div>
 
