@@ -106,7 +106,7 @@ const server = http.createServer(async (req, res) => {
 
   // Default to index.html
   if (filePath === "./") {
-    filePath = "./index.html"
+    filePath = "./welcome.html"
   }
 
   // Handle placeholder.svg requests
