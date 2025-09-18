@@ -3363,3 +3363,36 @@ button:focus:not(:focus-visible) {
   top: 15px;
   right: -5px;
 }
+/* Ícones dentro dos botões de ação */
+.btn-icon {
+  width: 50%;         /* ocupa metade do botão */
+  height: 50%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.action-btn:hover .btn-icon {
+  transform: scale(1.2);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}
+
+/* Diferenciar os botões */
+.reject-btn {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
+}
+
+.reject-btn:hover {
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+}
+
+.adopt-btn {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+.adopt-btn:hover {
+  background: linear-gradient(135deg, #388e3c, #1b5e20);
+}
