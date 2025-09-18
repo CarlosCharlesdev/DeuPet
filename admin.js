@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: 2,
           petId: 2,
           petName: "Max",
-          petImage: "/placeholder.svg?height=60&width=60&text=Max",
+          petImage: "/imagAnimais/pretinha.jpg",
           clientName: "João Santos",
           lastMessage: "Obrigado pelas informações! Quando posso visitá-lo?",
           lastMessageTime: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
@@ -246,9 +246,9 @@ document.addEventListener("DOMContentLoaded", () => {
           id: 3,
           petId: 3,
           petName: "Mimi",
-          petImage: "/placeholder.svg?height=60&width=60&text=Mimi",
+          petImage: "/imagAnimais/carameloAdotado.webp",
           clientName: "Ana Costa",
-          lastMessage: "A Mimi se dá bem com outros gatos?",
+          lastMessage: "A Mimi se dá bem com gatos?",
           lastMessageTime: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
           unreadCount: 1,
           isActive: true,
