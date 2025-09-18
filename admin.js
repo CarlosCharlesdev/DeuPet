@@ -60,13 +60,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const mockAnimals = [
         {
           id: 1,
-          name: "Luna",
+          name: "Sasha",
           age: "2 anos",
           breed: "Golden Retriever",
           location: "São Paulo, SP",
-          image: "/placeholder.svg?height=200&width=300&text=Luna+Golden+Retriever",
+          image: "/placeholder.svg?height=200&width=300&text=Sasha+Golden+Retriever",
           characteristics: ["Carinhosa", "Brincalhona", "Obediente"],
-          bio: "Oi! Sou a Luna e adoro brincar no parque. Sou muito carinhosa e amo fazer novos amigos.",
+          bio: "Oi! Sou a Sasha e adoro brincar no parque. Sou muito carinhosa e amo fazer novos amigos.",
           size: "Grande",
           type: "dog",
         },
@@ -131,10 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           id: 1,
           petId: 1,
-          petName: "Luna",
-          petImage: "/placeholder.svg?height=200&width=300&text=Luna+Golden+Retriever",
+          petName: "Sasha",
+          petImage: "/imagAnimais/sasha.jpg",
           clientId: 1,
-          clientName: "Maria Silva",
+          clientName: "Beatriz Eduarda",
           clientEmail: "maria@email.com",
           timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
           status: "pending",
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: 2,
           petId: 2,
           petName: "Max",
-          petImage: "/placeholder.svg?height=200&width=300&text=Max+Labrador",
+          petImage: "/imagAnimais/pretinha.jpg",
           clientId: 2,
           clientName: "João Santos",
           clientEmail: "joao@email.com",
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: 3,
           petId: 3,
           petName: "Mimi",
-          petImage: "/placeholder.svg?height=200&width=300&text=Mimi+Siames",
+          petImage: "/imagAnimais/carameloAdotado.webp",
           clientId: 3,
           clientName: "Ana Costa",
           clientEmail: "ana@email.com",
@@ -223,10 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           id: 1,
           petId: 1,
-          petName: "Luna",
-          petImage: "/placeholder.svg?height=60&width=60&text=Luna",
-          clientName: "Maria Silva",
-          lastMessage: "Oi! Gostaria de saber mais sobre a Luna. Ela é vacinada?",
+          petName: "Sasha",
+          petImage: "/imagAnimais/sasha.jpg",
+          clientName: "Beatriz Eduarda",
+          lastMessage: "Oi! Gostaria de saber mais sobre a Sasha. Ela é vacinada?",
           lastMessageTime: new Date(Date.now() - 30 * 60 * 1000), // 30 min ago
           unreadCount: 2,
           isActive: true,
@@ -501,9 +501,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Mock data for the specific chat
     const chatData = {
-      petName: "Luna",
-      petImage: "/placeholder.svg?height=60&width=60&text=Luna",
-      clientName: "Maria Silva",
+      petName: "Sasha",
+      petImage: "/imagAnimais/sasha.jpg",
+      clientName: "Beatriz Eduarda",
     }
 
     // Fill chat modal with data
@@ -516,24 +516,24 @@ document.addEventListener("DOMContentLoaded", () => {
     messagesContainer.innerHTML = ""
 
     // Add multiple mock messages to test scroll
-    addOngMessage("client", "Oi! Vi a Luna no PetMatch e me interessei. Ela é muito fofa!", "Maria Silva")
-    addOngMessage("client", "Gostaria de saber mais sobre ela. Ela é vacinada?", "Maria Silva")
+    addOngMessage("client", "Oi! Vi a Sasha no PetMatch e me interessei. Ela é muito fofa!", "Beatriz Eduarda")
+    addOngMessage("client", "Gostaria de saber mais sobre ela. Ela é vacinada?", "Beatriz Eduarda")
     addOngMessage(
       "ong",
-      "Olá Maria! Que bom que se interessou pela Luna! Sim, ela está com todas as vacinas em dia.",
+      "Olá Maria! Que bom que se interessou pela Sasha! Sim, ela está com todas as vacinas em dia.",
       "ONG Amigos dos Animais",
     )
-    addOngMessage("client", "Que ótimo! E ela se dá bem com crianças?", "Maria Silva")
-    addOngMessage("ong", "Sim! A Luna adora crianças. Ela é muito dócil e brincalhona.", "ONG Amigos dos Animais")
-    addOngMessage("client", "Perfeito! Tenho dois filhos pequenos. Quando posso conhecê-la?", "Maria Silva")
+    addOngMessage("client", "Que ótimo! E ela se dá bem com crianças?", "Beatriz Eduarda")
+    addOngMessage("ong", "Sim! A Sasha adora crianças. Ela é muito dócil e brincalhona.", "ONG Amigos dos Animais")
+    addOngMessage("client", "Perfeito! Tenho dois filhos pequenos. Quando posso conhecê-la?", "Beatriz Eduarda")
     addOngMessage(
       "ong",
       "Que maravilha! Podemos agendar uma visita. Vocês podem vir no fim de semana?",
       "ONG Amigos dos Animais",
     )
-    addOngMessage("client", "Sim! Sábado de manhã seria ideal para nós.", "Maria Silva")
+    addOngMessage("client", "Sim! Sábado de manhã seria ideal para nós.", "Beatriz Eduarda")
     addOngMessage("ong", "Perfeito! Sábado às 10h então. Vou enviar o endereço por aqui.", "ONG Amigos dos Animais")
-    addOngMessage("client", "Combinado! Estamos muito animados para conhecer a Luna!", "Maria Silva")
+    addOngMessage("client", "Combinado! Estamos muito animados para conhecer a Sasha!", "Beatriz Eduarda")
 
     // Show modal - REMOVED OVERLAY REFERENCE
     const modal = document.getElementById("ongChatModal")
